@@ -261,7 +261,8 @@ function generateBundler(opts) {
 }
 
 function discTask(opts) {
-  let bundler = generateBundler(opts)
+  let bundler = generateBundler(opts).transform("babelify", {presets: ["es2015", "react"]}) // temporary, move back into generateBundler when autoreload works
+  console.log("discTask, opts.watch:", opts.watch);
 
   if (opts.watch) {
     bundler = watchify(bundler)
