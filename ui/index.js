@@ -48,11 +48,12 @@ function startApp (metamaskState, accountManager, opts) {
 
   // start app
   render(
-    h(Root, {
+    h(Root, { // Root is a JSX element, which uses React.createElement under the hood
       // inject initial state
       store: store,
     }
-  ), opts.container)
+  ), opts.container)//opts.container is likely a hyperscript element. They won't work together. We can keep trying, but ultimately, unless we can find a way to 
+  // render a JSX element *with* hyperscript elements as children, it will never work for the entire app.
 
   return store
 }
