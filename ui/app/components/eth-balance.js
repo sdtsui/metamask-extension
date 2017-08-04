@@ -22,7 +22,7 @@ EthBalanceComponent.prototype.render = function () {
 
   return (
 
-    h('.ether-balance.ether-balance-amount', {
+    h('div.ether-balance.ether-balance-amount.flex-column.flex-center', {
       style,
     }, [
       h('div', {

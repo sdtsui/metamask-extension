@@ -3,9 +3,12 @@ const connect = require('react-redux').connect
 const h = require('react-hyperscript')
 const inherits = require('util').inherits
 const actions = require('../actions')
+const ethUtil = require('ethereumjs-util')
 // slideout menu
 const SlideoutMenu = require('react-burger-menu').slide
 const WalletView = require('./wallet-view')
+
+const EthBalance = require('./components/eth-balance')
 
 // const Identicon = require('./identicon')
 // const AccountDropdowns = require('./account-dropdowns').AccountDropdowns
@@ -16,13 +19,17 @@ module.exports = connect(mapStateToProps, mapDispatchToProps)(TxView)
 function mapStateToProps (state) {
   return {
     sidebarOpen: state.appState.sidebarOpen,
+    accounts: state.metamask.accounts,
+    address: state.metamask.selectedAddress,
+    conversionRate: state.metamask.conversionRate,
+    currentCurrency: state.metamask.currentCurrency,
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    showSidebar: () => {dispatch(actions.showSidebar())},
-    hideSidebar: () => {dispatch(actions.hideSidebar())},
+    showSidebar: () => { dispatch(actions.showSidebar()) },
+    hideSidebar: () => { dispatch(actions.hideSidebar()) },
   }
 }
 
@@ -41,6 +48,14 @@ function TxView () {
 }
 
 TxView.prototype.render = function () {
+
+  var props = this.props
+  var selected = props.address || Object.keys(props.accounts)[0]
+  var checksumAddress = selected && ethUtil.toChecksumAddress(selected)
+  var identity = props.identities[selected]
+  var account = props.accounts[selected]
+  const { network, conversionRate, currentCurrency } = props
+
   return h('div.tx-view.flex-column', {
     style: {
       flexGrow: 2,
@@ -52,7 +67,7 @@ TxView.prototype.render = function () {
     h('div.phone-visible.fa.fa-bars', {
       onClick: () => {
         this.props.sidebarOpen ? this.props.hideSidebar() : this.props.showSidebar()
-      }
+      },
     }, [
     ]),
 
@@ -60,14 +75,14 @@ TxView.prototype.render = function () {
       style: {
         margin: '1.8em 1.3em 0.8em 1.3em',
         // flex: '1 0 520px',
-      }
+      },
     }, [
 
       // laptop: flex-row
       // mobile: flex-column
       h('div.flex-row.flex-center', {
         style: {
-        }
+        },
       }, [
 
         // laptop: 50px 50px
@@ -79,18 +94,25 @@ TxView.prototype.render = function () {
           style: {
             borderRadius: '25px',
             border: '1px solid',
-          }
+          },
         }),
 
         // laptop: 5vw?
         // phone: 50vw?
-        h('div.flex-column.flex-center', {
-          style: {}
-        }, [
-          h('div', {}, '1001.124 ETH'),
+        // h('div.flex-column.flex-center', {
+        //   style: {}
+        // }, [
+        //   h('div', {}, '1001.124 ETH'),
 
-          h('div', {}, '$300,000 USD'),
-        ]),
+        //   h('div', {}, '$300,000 USD'),
+        // ]),
+
+        h(EthBalance, {
+          value: account && account.balance,
+          conversionRate,
+          currentCurrency,
+          style: {},
+        }),
 
         // laptop: 10vw?
         // phone: 75vw?

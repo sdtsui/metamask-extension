@@ -66,7 +66,7 @@ MainContainer.prototype.render = function () {
   }, [
     h(contents.component, {
       key: contents.key,
-    }, [])
+    }, []), 
   ])
 }
 
