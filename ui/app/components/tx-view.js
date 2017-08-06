@@ -8,7 +8,7 @@ const ethUtil = require('ethereumjs-util')
 const SlideoutMenu = require('react-burger-menu').slide
 const WalletView = require('./wallet-view')
 
-const EthBalance = require('./components/eth-balance')
+const EthBalance = require('./eth-balance')
 
 // const Identicon = require('./identicon')
 // const AccountDropdowns = require('./account-dropdowns').AccountDropdowns
@@ -19,6 +19,7 @@ module.exports = connect(mapStateToProps, mapDispatchToProps)(TxView)
 function mapStateToProps (state) {
   return {
     sidebarOpen: state.appState.sidebarOpen,
+    identities: state.metamask.identities,
     accounts: state.metamask.accounts,
     address: state.metamask.selectedAddress,
     conversionRate: state.metamask.conversionRate,
@@ -55,6 +56,8 @@ TxView.prototype.render = function () {
   var identity = props.identities[selected]
   var account = props.accounts[selected]
   const { network, conversionRate, currentCurrency } = props
+
+  console.log("account is", selected)
 
   return h('div.tx-view.flex-column', {
     style: {
